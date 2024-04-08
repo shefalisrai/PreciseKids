@@ -1,5 +1,7 @@
 %%Plot AllROIs from each Network mean and std values 
 
+
+directory='/Users/shefalirai/Desktop/PK_ROIs_FCTRCs';
 % Define the networks
 networks = {'AUD','CON', 'DAN','DMN','FP','MTL','PMN','PON','SAL', 'SMd', 'SMl', 'VAN','VIS'};
 

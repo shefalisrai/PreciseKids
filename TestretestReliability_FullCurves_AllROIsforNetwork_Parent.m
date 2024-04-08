@@ -203,7 +203,7 @@ for j = 1:size(ROI_P_combined1{1}, 1)
 
         % Correlate
         for r = 1:size(combined_ROI_session1, 1)
-            ROI_corr_allses_P{(i/scan_length_increment), j} = corr(ROI_P_combined1_connectome{(i/scan_length_increment), j}(r, :)', ROI_P_combined2_connectome{(i/scan_length_increment), j}(r, :)');
+            ROI_corr_allses_P{(i/scan_length_increment), j}(r) = corr(ROI_P_combined1_connectome{(i/scan_length_increment), j}(r, :)', ROI_P_combined2_connectome{(i/scan_length_increment), j}(r, :)');
         end
     end
 end
@@ -211,7 +211,6 @@ end
 % Compute mean and standard deviation of correlations across subjects
 mean_values_P = nanmean(cell2mat(ROI_corr_allses_P), 2);
 std_values_P = std(cell2mat(ROI_corr_allses_P), [], 2);
-
 
 %% Save FCTRC values for ROI
 csvwrite(strcat(ROIs_FCTRCs_outputpath, sprintf('/Parent_FCTRC_%snetwork_allscantimes_meanvalues.csv', network_name)), mean_values_P)

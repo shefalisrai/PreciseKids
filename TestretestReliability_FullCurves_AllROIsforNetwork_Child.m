@@ -198,7 +198,7 @@ for j = 1:size(ROI_C_combined1{1}, 1)
 
         % Correlate
         for r = 1:size(combined_ROI_session1, 1)
-            ROI_corr_allses_C{(i/scan_length_increment), j} = corr(ROI_C_combined1_connectome{(i/scan_length_increment), j}(r, :)', ROI_C_combined2_connectome{(i/scan_length_increment), j}(r, :)');
+            ROI_corr_allses_C{(i/scan_length_increment), j}(r) = corr(ROI_C_combined1_connectome{(i/scan_length_increment), j}(r, :)', ROI_C_combined2_connectome{(i/scan_length_increment), j}(r, :)');
         end
     end
 end

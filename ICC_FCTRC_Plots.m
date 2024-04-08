@@ -180,10 +180,10 @@ for network = networks
     network = char(network);
     
     % Construct the file paths for mean and standard deviation files
-    file_mean_C = fullfile(directory, sprintf('Child_FCTRC_%snetwork_allscantimes_meanvalues.csv', network));
-    file_std_C = fullfile(directory, sprintf('Child_FCTRC_%snetwork_allscantimes_stdvalues.csv', network));
-    file_mean_P = fullfile(directory, sprintf('Parent_FCTRC_%snetwork_allscantimes_meanvalues.csv', network));
-    file_std_P = fullfile(directory, sprintf('Parent_FCTRC_%snetwork_allscantimes_stdvalues.csv', network));
+    file_mean_C = fullfile(FCTRC_outputpath, sprintf('Child_FCTRC_%snetwork_allscantimes_meanvalues.csv', network));
+    file_std_C = fullfile(FCTRC_outputpath, sprintf('Child_FCTRC_%snetwork_allscantimes_stdvalues.csv', network));
+    file_mean_P = fullfile(FCTRC_outputpath, sprintf('Parent_FCTRC_%snetwork_allscantimes_meanvalues.csv', network));
+    file_std_P = fullfile(FCTRC_outputpath, sprintf('Parent_FCTRC_%snetwork_allscantimes_stdvalues.csv', network));
     
     % Load mean and standard deviation values for children and adults
     mean_values_C.(network) = csvread(file_mean_C);

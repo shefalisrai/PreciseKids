@@ -202,7 +202,7 @@ end
 
 %% 200 or 1000 parcels FC-TRC reliability surface maps
 
-% Outer loop for each subject
+% Create connectomes for C
 for j = 1:numel(ptseries_C_combined1)
     % Check if both first and last halves are not empty
     if ~isempty(ptseries_C_combined1{j}) && ~isempty(ptseries_C_combined2{j})
@@ -214,30 +214,27 @@ for j = 1:numel(ptseries_C_combined1)
                 break;
             end
 
-            % Extract the first i columns from the matrix for the current subject
+           % Extract the first i columns from the matrix for the current subject
             ptseries_firstfourth_columns_C = ptseries_C_combined1{j}(:, 1:min(i, size(ptseries_C_combined1{j}, 2)));
             ptseries_secondthird_columns_C = ptseries_C_combined2{j}(:, 1:min(i, size(ptseries_C_combined2{j}, 2)));
 
             % Compute correlations for the current subject
-            ptseries_firstfourth_connectome_C = corr(ptseries_firstfourth_columns_C');
-            ptseries_secondthird_connectome_C = corr(ptseries_secondthird_columns_C');
-
-            ptseries_corr_allses_C_709volume = zeros(1, size(ptseries_firstfourth_connectome_C, 1));
+            ptseries_firstfourth_connectome_C{j} = corr(ptseries_firstfourth_columns_C');
+            ptseries_secondthird_connectome_C{j} = corr(ptseries_secondthird_columns_C');
 
             % Remove NaNs
-            ptseries_firstfourth_connectome_C(isnan(ptseries_firstfourth_connectome_C)) = 0;
-            ptseries_secondthird_connectome_C(isnan(ptseries_secondthird_connectome_C)) = 0;
+            ptseries_firstfourth_connectome_C{j}(isnan(ptseries_firstfourth_connectome_C{j})) = 0;
+            ptseries_secondthird_connectome_C{j}(isnan(ptseries_secondthird_connectome_C{j})) = 0;
 
-            % Correlate
-            for r = 1:size(ptseries_firstfourth_connectome_C, 1)
-                ptseries_corr_allses_C_709volume(r) = corr(ptseries_firstfourth_connectome_C(r, :)', ptseries_secondthird_connectome_C(r, :)');
-            end
-
+                % Correlate
+                for r = 1:size(ptseries_firstfourth_connectome_C{2}, 1)
+                    ptseries_corr_allses_C_709volume{j}(r) = corr(ptseries_firstfourth_connectome_C{j}(r, :)', ptseries_secondthird_connectome_C{j}(r, :)');
+                end
         end
     end
 end
 
-% Outer loop for each subject
+% Create connectomes for P
 for j = 1:numel(ptseries_P_combined1)
     % Check if both first and last halves are not empty
     if ~isempty(ptseries_P_combined1{j}) && ~isempty(ptseries_P_combined2{j})
@@ -249,37 +246,71 @@ for j = 1:numel(ptseries_P_combined1)
                 break;
             end
 
-            % Extract the first i columns from the matrix for the current subject
+           % Extract the first i columns from the matrix for the current subject
             ptseries_firstfourth_columns_P = ptseries_P_combined1{j}(:, 1:min(i, size(ptseries_P_combined1{j}, 2)));
             ptseries_secondthird_columns_P = ptseries_P_combined2{j}(:, 1:min(i, size(ptseries_P_combined2{j}, 2)));
 
             % Compute correlations for the current subject
-            ptseries_firstfourth_connectome_P = corr(ptseries_firstfourth_columns_P');
-            ptseries_secondthird_connectome_P = corr(ptseries_secondthird_columns_P');
-
-            ptseries_corr_all_P_709volume = zeros(1, size(ptseries_firstfourth_connectome_P, 1));
+            ptseries_firstfourth_connectome_P{j} = corr(ptseries_firstfourth_columns_P');
+            ptseries_secondthird_connectome_P{j} = corr(ptseries_secondthird_columns_P');
 
             % Remove NaNs
-            ptseries_firstfourth_connectome_P(isnan(ptseries_firstfourth_connectome_P)) = 0;
-            ptseries_secondthird_connectome_P(isnan(ptseries_secondthird_connectome_P)) = 0;
+            ptseries_firstfourth_connectome_P{j}(isnan(ptseries_firstfourth_connectome_P{j})) = 0;
+            ptseries_secondthird_connectome_P{j}(isnan(ptseries_secondthird_connectome_P{j})) = 0;
 
-            % Correlate FC-TRC
-            for r = 1:size(ptseries_firstfourth_connectome_P, 1)
-                ptseries_corr_all_P_709volume(r) = corr(ptseries_firstfourth_connectome_P(r, :)', ptseries_secondthird_connectome_P(r, :)');
-            end
-
+                % Correlate
+                for r = 1:size(ptseries_firstfourth_connectome_P{2}, 1)
+                    ptseries_corr_allses_P_709volume{j}(r) = corr(ptseries_firstfourth_connectome_P{j}(r, :)', ptseries_secondthird_connectome_P{j}(r, :)');
+                end
         end
     end
 end
+
+%% Calculate the mean across all subjects
+
+% For children
+nonEmptyCells = {};
+
+% Iterate over each cell in ptseries_corr_allses_C_709volume
+for i = 1:numel(ptseries_corr_allses_C_709volume)
+    % Check if the cell is not empty
+    if ~isempty(ptseries_corr_allses_C_709volume{i})
+        % Add the non-empty matrix to the nonEmptyCells cell array
+        nonEmptyCells{end+1} = ptseries_corr_allses_C_709volume{i};
+    end
+end
+
+% Calculate the overall mean across all subjects
+overallMean = nanmean(cat(3, nonEmptyCells{:}), 3);
+
+% Convert the result to a row vector
+ptseries_corr_allses_C_709volume_mean = overallMean';
+
+% For parents
+nonEmptyCells2 = {};
+
+for i = 1:numel(ptseries_corr_allses_P_709volume)
+    % Check if the cell is not empty
+    if ~isempty(ptseries_corr_allses_P_709volume{i})
+        % Add the non-empty matrix to the nonEmptyCells cell array
+        nonEmptyCells2{end+1} = ptseries_corr_allses_P_709volume{i};
+    end
+end
+
+% Calculate the overall mean across all subjects
+overallMean2 = nanmean(cat(3, nonEmptyCells2{:}), 3);
+
+% Convert the result to a row vector
+ptseries_corr_allses_P_709volume_mean = overallMean2';
 
 
 %Open MSC averaged parcellated timseries to replace
 subject_cifti=ciftiopen(sprintf('/Users/shefalirai/Desktop/MSCAveraged_Timeseries_%dparcels_17nets.ptseries.nii', parcel_num),wbcommand);
 
 % Replace original .cdata with P&C parcelled reliability values across 200 parcels
-subject_cifti.cdata=ptseries_corr_allses_C_709volume';
-ciftisavereset(subject_cifti, sprintf('/Users/shefalirai/Desktop/PK_ICCs/AvgChild_FCTRCReliability_24minsplithalf_%dparcels_17nets.pscalar.nii', parcel_num), wbcommand);
-subject_cifti.cdata=ptseries_corr_all_P_709volume';
-ciftisavereset(subject_cifti, sprintf('/Users/shefalirai/Desktop/PK_ICCs/AvgParent_FCTRCReliability_24minsplithalf_%dparcels_17nets.pscalar.nii', parcel_num), wbcommand);
+subject_cifti.cdata=ptseries_corr_allses_C_709volume_mean;
+ciftisavereset(subject_cifti, sprintf('/Users/shefalirai/Desktop/PK_FCTRCs/AvgChild_FCTRCReliability_24minsplithalf_%dparcels_17nets.pscalar.nii', parcel_num), wbcommand);
+subject_cifti.cdata=ptseries_corr_allses_P_709volume_mean;
+ciftisavereset(subject_cifti, sprintf('/Users/shefalirai/Desktop/PK_FCTRCs/AvgParent_FCTRCReliability_24minsplithalf_%dparcels_17nets.pscalar.nii', parcel_num), wbcommand);
 
 

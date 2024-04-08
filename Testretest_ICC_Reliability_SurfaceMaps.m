@@ -225,6 +225,7 @@ for j = 1:numel(ptseries_C_combined1)
             % Remove NaNs
             ptseries_firstfourth_connectome_C{j}(isnan(ptseries_firstfourth_connectome_C{j})) = 0;
             ptseries_secondthird_connectome_C{j}(isnan(ptseries_secondthird_connectome_C{j})) = 0;
+            
         end
     end
 end

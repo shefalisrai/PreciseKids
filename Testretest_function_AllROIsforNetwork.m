@@ -14,7 +14,7 @@ for i = 1:numel(networks)
 
     % Call the function with current network parameters
     TestretestReliability_FullCurves_AllROIsforNetwork_Child(network_number, network_name);
-    %TestretestReliability_FullCurves_AllROIsforNetwork_Parent(network_number, network_name);
+    TestretestReliability_FullCurves_AllROIsforNetwork_Parent(network_number, network_name);
 end
 
 
