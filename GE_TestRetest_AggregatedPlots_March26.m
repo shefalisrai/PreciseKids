@@ -20,8 +20,8 @@ end
 first_session=[];
 second_session=[];
 % Assign tables to variables
-first_session = [matrix_table{2}; matrix_table{4}; matrix_table{6}; matrix_table{16}];
-second_session = [matrix_table{10}; matrix_table{12}; matrix_table{14}; matrix_table{8}];
+first_session = [matrix_table{17}];
+second_session = [matrix_table{18} ];
 
 gescan_first =[];
 gescan_second=[];
@@ -130,7 +130,7 @@ hold off;
 
 % gescan_first_connectome(1:201:end) = NaN;
 % imagesc(gescan_first_connectome)
-
+% 
 
 
 
